@@ -38,11 +38,9 @@ const s = StyleSheet.create({
         borderRadius: 10,
         overflow: 'hidden',
         marginVertical: 10
-        // borderColor: 'red', borderWidth: 1
     },
     mealRow: {
         flexDirection: 'row',
-
     },
     mealImage: {
         width: '100%',

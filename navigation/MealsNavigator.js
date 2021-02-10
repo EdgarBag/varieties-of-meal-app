@@ -23,7 +23,12 @@ import TextBox from '../components/TextBox';
 const defaultStackNavOptions = {
     headerStyle: headerStyle.headerStyle,
     headerTintColor: headerStyle.headerTintColor,
-    headerTitle: 'a Screen Default'
+    headerTitle: 'a Screen Default',
+    headerTitleStyle: {
+        fontFamily: 'caviar_d_bold'
+    },
+    // headerBackTitleStyle: { fontFamily: 'caviar_d_bold' }
+
 }
 
 const MealsNavigator = createStackNavigator({

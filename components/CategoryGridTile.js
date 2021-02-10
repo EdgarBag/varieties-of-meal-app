@@ -49,6 +49,6 @@ const s = StyleSheet.create({
         fontSize: 20,
         textAlign: 'right'
     }
-
+    
 })
 export default CategoryGridTile
