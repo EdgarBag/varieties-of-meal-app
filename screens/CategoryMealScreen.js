@@ -1,5 +1,6 @@
 import React from 'react'
-import { CATEGORIES, MEALS } from './../data/dummy-data'
+import { useSelector } from 'react-redux'
+
 
 //components
 import MealItem from './../components/MealItem'
@@ -8,20 +9,28 @@ import MealFlatList from '../components/MealFlatList'
 // utils
 import colors from './../utils/colors'
 import settings from './../data/defaultSettings'
+import { CATEGORIES } from './../data/dummy-data'
 
 
 const CategoryMealScreen = props => {
+    const availableMeals = useSelector(state => state.meals.filteredMeals);
     const categoryId = props.navigation.getParam('categoryId') || settings.defaultCategory.id;
-    const displayedMeals = MEALS.filter(meal => meal.categoryIds.indexOf(categoryId) >= 0)
+    const displayedMeals = availableMeals.filter(meal => meal.categoryIds.indexOf(categoryId) >= 0)
+    const favoriteMeals = useSelector(state => state.meals.favoriteMeals)
 
     const renderMealItem = itemData => {
-        console.log('meal item');
+        const isFavorite = favoriteMeals.some(meal => meal.id === itemData.item.id);
         return <MealItem
             itemFullData={itemData.item}
-            onSelectMeal={() => props.navigation.navigate({
-                routeName: 'MealDetails',
-                params: { mealId: itemData.item.id }
-            })}
+            navigation={props.navigation}
+        // onSelectMeal={() => props.navigation.navigate({
+        //     routeName: 'MealDetails',
+        //     params: {
+        //         mealId: itemData.item.id,
+        //         mealTitle: itemData.item.title,
+        //         isFav: isFavorite
+        //     }
+        // })}
         />
     }
 

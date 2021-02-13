@@ -1,14 +1,24 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, } from 'react-native'
 import TextBox from './TextBox'
 
 const MealItem = props => {
 
-    const { title, duration, complexity, affordability, imageUrl } = props.itemFullData;
+    const { id, title, duration, complexity, affordability, imageUrl } = props.itemFullData;
+    const favMeals = useSelector(state => state.meals.favoriteMeals);
+    const isFavorite = favMeals.some(meal => meal.id === id)
 
     return (
         <View style={s.mealBox}>
-            <TouchableOpacity onPress={props.onSelectMeal} onPress={props.onSelectMeal}>
+            <TouchableOpacity onPress={props.onSelectMeal} onPress={() => props.navigation.navigate({
+                routeName: 'MealDetails',
+                params: {
+                    mealId: id,
+                    mealTitle: title,
+                    isFav: isFavorite
+                }
+            })}>
                 <View>
                     <View style={{ ...s.mealRow, ...s.mealHeader }}>
                         <ImageBackground source={{ uri: imageUrl }} style={s.mealImage}>

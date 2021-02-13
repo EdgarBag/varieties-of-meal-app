@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import fetchFont from './utils/fontSetup'
-import MealsNavigator from './navigation/MealsNavigator'
 import { enableScreens } from 'react-native-screens'
+
+// navigation
+import MealsNavigator from './navigation/MealsNavigator'
+
+// redux
+import mealsReducer from './store/reducer/meals'
+import { createStore, combineReducers } from 'redux'
+import { Provider } from 'react-redux'
+
 
 
 enableScreens();
+
+const rootReducer = combineReducers({
+  meals: mealsReducer
+})
+const store = createStore(rootReducer)
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -17,5 +30,8 @@ export default function App() {
       onError={(err) => console.log(err, 'error from app loading ')} />
   }
 
-  return <MealsNavigator />
+  return (
+    <Provider store={store}>
+      <MealsNavigator />
+    </Provider>)
 }

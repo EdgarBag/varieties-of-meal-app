@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 // components
@@ -6,21 +7,31 @@ import MealFlatList from './../components/MealFlatList'
 import MealItem from './../components/MealItem'
 import HeaderButton from './../components/HeaderButton'
 
-import { MEALS } from './../data/dummy-data'
+// import { MEALS } from './../data/dummy-data'
 import headerStyle from './../styles/headerStyle'
 
 const FavoritesScreen = props => {
-    const favMeals = MEALS.filter(meal => meal.id === 'm1' || meal.id === 'm2')
 
+    const favoriteMeals = useSelector(state => state.meals.favoriteMeals)
     const renderFavMealItem = itemData => {
+        // const isFavorite = favoriteMeals.some(meal => meal.id === itemData.item.id);
         return <MealItem
             itemFullData={itemData.item}
+            navigation={props.navigation}
+        // onSelectMeal={() => props.navigation.navigate({
+        //     routeName: 'MealDetails',
+        //     params: {
+        //         mealId: itemData.item.id,
+        //         mealTitle: itemData.item.title,
+        //         isFav: isFavorite
+        //     }
+        // })}
         />
     }
 
     return (
         <MealFlatList
-            listData={favMeals}
+            listData={favoriteMeals}
             itemForRender={renderFavMealItem}
         />
     )
