@@ -1,36 +1,40 @@
+// settings
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { View, StyleSheet } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 // components
-import MealFlatList from './../components/MealFlatList'
+import FlatListBox from './../components/FlatListBox'
 import MealItem from './../components/MealItem'
 import HeaderButton from './../components/HeaderButton'
+import TextBox from './../components/TextBox'
 
-// import { MEALS } from './../data/dummy-data'
+// utils
 import headerStyle from './../styles/headerStyle'
 
 const FavoritesScreen = props => {
 
     const favoriteMeals = useSelector(state => state.meals.favoriteMeals)
     const renderFavMealItem = itemData => {
-        // const isFavorite = favoriteMeals.some(meal => meal.id === itemData.item.id);
+
         return <MealItem
             itemFullData={itemData.item}
             navigation={props.navigation}
-        // onSelectMeal={() => props.navigation.navigate({
-        //     routeName: 'MealDetails',
-        //     params: {
-        //         mealId: itemData.item.id,
-        //         mealTitle: itemData.item.title,
-        //         isFav: isFavorite
-        //     }
-        // })}
+
         />
     }
 
+    if (favoriteMeals.length === 0 || !favoriteMeals) {
+        return <View style={s.noMealsTittle}>
+            <TextBox>
+                No Favorite meals found. Start adding some!
+            </TextBox>
+        </View>
+    }
+
     return (
-        <MealFlatList
+        <FlatListBox
             listData={favoriteMeals}
             itemForRender={renderFavMealItem}
         />
@@ -49,5 +53,12 @@ FavoritesScreen.navigationOptions = navData => {
     }
 }
 
+const s = StyleSheet.create({
+    noMealsTittle: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+})
 
 export default FavoritesScreen

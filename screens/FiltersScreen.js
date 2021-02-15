@@ -2,6 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { View, Text, StyleSheet, Switch } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
+// redux
+import { useDispatch } from 'react-redux'
+import { setFilters } from './../store/actions/meals'
+
 // components
 import HeaderButton from './../components/HeaderButton'
 import TextBox from './../components/TextBox'
@@ -12,26 +16,43 @@ import headerStyle from './../styles/headerStyle';
 import colors from './../utils/colors'
 
 const FiltersScreen = props => {
-    const { navigation } = props;
-    const [isGlutenFree, setIsGlutenFree] = useState(false),
+    const dispatch = useDispatch(),
+        [isGlutenFree, setIsGlutenFree] = useState(false),
         [isVegan, setIsVegan] = useState(false),
         [isVegetarian, setIsVegetarian] = useState(false),
         [isLactoseFree, setIsLactoseFree] = useState(false);
 
-
     const saveFilters = useCallback(() => {
-        const setFilters = {
+        const appliedFilters = {
             glutenFree: isGlutenFree,
             veganFree: isVegan,
             vegetarianFree: isVegetarian,
             lactoseFree: isLactoseFree
         };
-        console.log(setFilters, 'set filters');
-    }, [isGlutenFree, isVegan, isVegetarian, isLactoseFree])
+        dispatch(setFilters(appliedFilters));
+    }, [isGlutenFree, isVegan, isVegetarian, isLactoseFree, dispatch]);
+
+    const unSaveFilters = useCallback(() => {
+        setIsGlutenFree(false);
+        setIsVegan(false);
+        setIsVegetarian(false);
+        setIsLactoseFree(false)
+        const defaultFilters = {
+            glutenFree: isGlutenFree,
+            veganFree: isVegan,
+            vegetarianFree: isVegetarian,
+            lactoseFree: isLactoseFree
+        };
+        dispatch(setFilters(defaultFilters))
+    }, [isGlutenFree, isVegan, isVegetarian, isLactoseFree, dispatch])
 
     useEffect(() => {
         props.navigation.setParams({ save: saveFilters });
     }, [saveFilters])
+
+    useEffect(() => {
+        props.navigation.setParams({ unSave: unSaveFilters })
+    }, unSaveFilters)
 
     return (
         <View style={s.filtersScreen}>
@@ -69,6 +90,10 @@ FiltersScreen.navigationOptions = navData => {
                 onPress={() => { navData.navigation.toggleDrawer() }} />
         </HeaderButtons>,
         headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton}>
+            <Item title='Save'
+                iconName='ios-save-outline'
+                onPress={navData.navigation.getParam('unSave')}
+            />
             <Item title='Save'
                 iconName='ios-save'
                 onPress={navData.navigation.getParam('save')}

@@ -35,6 +35,7 @@ const s = StyleSheet.create({
         padding: 15,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
+        // transform: [{rotate:'180deg'}]
 
 
     },
@@ -49,6 +50,6 @@ const s = StyleSheet.create({
         fontSize: 20,
         textAlign: 'right'
     }
-    
+
 })
 export default CategoryGridTile

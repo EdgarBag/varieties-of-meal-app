@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "varieties-of-meal",
-    "slug": "varieties-of-meal",
+    "name": "varieties-of-meal-app",
+    "slug": "varieties-of-meal-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

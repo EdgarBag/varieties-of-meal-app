@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect } from 'react'
-import { ScrollView, Image, View, Text, StyleSheet, Button, Platform } from 'react-native'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { ScrollView, Image, View, StyleSheet, Animated } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
-import { MEALS } from './../data/dummy-data'
 
+// redux
 import { useSelector, useDispatch } from 'react-redux'
+
+// utils
 import { toggleFavorite } from '../store/actions/meals'
 
 // componets
@@ -13,20 +15,29 @@ import ListItem from './../components/ListItem'
 
 
 const MealDetailsScreen = props => {
-    const meals = useSelector(state => state.meals.meals)
-    const mealId = props.navigation.getParam('mealId');
-    const isCurMealIsFavorite = useSelector(state =>
-        state.meals.favoriteMeals.some(meal => meal.id === mealId));
-    const selectedMealDetails = meals.find((meal) => meal.id === mealId)
+    const meals = useSelector(state => state.meals.meals),
+        mealId = props.navigation.getParam('mealId'),
+        isCurMealIsFavorite = useSelector(state =>
+            state.meals.favoriteMeals.some(meal => meal.id === mealId)),
+        selectedMealDetails = meals.find((meal) => meal.id === mealId),
+        dispatch = useDispatch();
 
-    const dispatch = useDispatch();
-    // console.log(isCurMealIsFavorite, ' &&&&&&&&&&&&&& ');
 
     const toggleFavoriteHandler = useCallback(() => {
-
         dispatch(toggleFavorite(mealId));
-    }, [dispatch, mealId])
+    }, [dispatch, mealId]);
 
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(
+            fadeAnim, {
+            toValue: 1,
+            duration: 1500,
+            useNativeDriver: true
+        }
+        ).start();
+    }, [fadeAnim])
     useEffect(() => {
         props.navigation.setParams({ toggleFavor: toggleFavoriteHandler })
     }, [toggleFavoriteHandler])
@@ -40,26 +51,27 @@ const MealDetailsScreen = props => {
             source={{ uri: selectedMealDetails.imageUrl }}
             style={s.image}
         />
-        <View style={s.mealDetails}>
-            <TextBox>{selectedMealDetails.duration}m</TextBox>
-            <TextBox>{selectedMealDetails.complexity.toUpperCase()}</TextBox>
-            <TextBox>{selectedMealDetails.affordability.toUpperCase()}</TextBox>
-            {/* <Button title='Go Back to Categories' onPress={() => { props.navigation.popToTop() }} /> */}
-        </View>
-        <TextBox style={s.title}>Ingredients</TextBox>
-        {selectedMealDetails.ingredients.map(ingredient => (<ListItem key={ingredient}>{ingredient}</ListItem>))}
-        <TextBox style={s.title}>Steps:</TextBox>
-        {selectedMealDetails.steps.map(step => (<ListItem key={step}>{step}</ListItem>))}
+        <Animated.View style={{ opacity: fadeAnim }}>
+
+            <View style={s.mealDetails}>
+                <TextBox>{selectedMealDetails.duration}m</TextBox>
+                <TextBox>{selectedMealDetails.complexity.toUpperCase()}</TextBox>
+                <TextBox>{selectedMealDetails.affordability.toUpperCase()}</TextBox>
+            </View>
+            <TextBox style={s.title}>Ingredients</TextBox>
+            {selectedMealDetails.ingredients.map(ingredient => (<ListItem key={ingredient}>{ingredient}</ListItem>))}
+            <TextBox style={s.title}>Steps:</TextBox>
+            {selectedMealDetails.steps.map(step => (<ListItem key={step}>{step}</ListItem>))}
+        </Animated.View>
     </ScrollView>
     )
 }
 
 MealDetailsScreen.navigationOptions = navigationData => {
-    // const mealId = navigationData.navigation.getParam('mealId');
-    const mealTitel = navigationData.navigation.getParam('mealTitle')
-    const toggleFavorite = navigationData.navigation.getParam('toggleFavor')
-    const isFav = navigationData.navigation.getParam('isFav')
-    console.log(isFav, 'is fav one');
+    const mealTitel = navigationData.navigation.getParam('mealTitle'),
+        toggleFavorite = navigationData.navigation.getParam('toggleFavor'),
+        isFav = navigationData.navigation.getParam('isFav');
+
     return {
         headerTitle: mealTitel,
         headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton}>
@@ -75,7 +87,6 @@ const s = StyleSheet.create({
     mealDetails: {
         flex: 1,
         justifyContent: 'space-between',
-        // alignItems: 'center',
         padding: 10,
         flexDirection: 'row'
     },
@@ -90,6 +101,5 @@ const s = StyleSheet.create({
 
     }
 });
-
 
 export default MealDetailsScreen

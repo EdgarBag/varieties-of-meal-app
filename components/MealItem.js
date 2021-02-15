@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, } from 'react-native'
+import { View, StyleSheet, ImageBackground, TouchableOpacity, Animated } from 'react-native'
 import TextBox from './TextBox'
 
 const MealItem = props => {
 
-    const { id, title, duration, complexity, affordability, imageUrl } = props.itemFullData;
-    const favMeals = useSelector(state => state.meals.favoriteMeals);
-    const isFavorite = favMeals.some(meal => meal.id === id)
+    const { id, title, duration, complexity, affordability, imageUrl } = props.itemFullData,
+        favMeals = useSelector(state => state.meals.favoriteMeals),
+        isFavorite = favMeals.some(meal => meal.id === id),
+        fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(
+            fadeAnim,
+            {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true
+            }
+        ).start();
+    }, [fadeAnim])
 
     return (
         <View style={s.mealBox}>
@@ -19,20 +31,22 @@ const MealItem = props => {
                     isFav: isFavorite
                 }
             })}>
-                <View>
-                    <View style={{ ...s.mealRow, ...s.mealHeader }}>
-                        <ImageBackground source={{ uri: imageUrl }} style={s.mealImage}>
-                            <View style={s.titleContainer}>
-                                <TextBox style={s.title} numberOfLines={1}>{title}</TextBox>
-                            </View>
-                        </ImageBackground>
+                <Animated.View style={{ opacity: fadeAnim }}>
+                    <View>
+                        <View style={{ ...s.mealRow, ...s.mealHeader }}>
+                            <ImageBackground source={{ uri: imageUrl }} style={s.mealImage}>
+                                <View style={s.titleContainer}>
+                                    <TextBox style={s.title} numberOfLines={1}>{title}</TextBox>
+                                </View>
+                            </ImageBackground>
+                        </View>
+                        <View style={{ ...s.mealRow, ...s.mealDetail }}>
+                            <TextBox>{duration}m</TextBox>
+                            <TextBox>{complexity.toUpperCase()}</TextBox>
+                            <TextBox>{affordability.toUpperCase()}</TextBox>
+                        </View>
                     </View>
-                    <View style={{ ...s.mealRow, ...s.mealDetail }}>
-                        <TextBox>{duration}m</TextBox>
-                        <TextBox>{complexity.toUpperCase()}</TextBox>
-                        <TextBox>{affordability.toUpperCase()}</TextBox>
-                    </View>
-                </View>
+                </Animated.View>
             </TouchableOpacity>
         </View>
     )

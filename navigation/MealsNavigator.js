@@ -31,7 +31,6 @@ const defaultStackNavOptions = {
         fontFamily: 'caviar_d_bold'
     },
     // headerBackTitleStyle: { fontFamily: 'caviar_d_bold' }
-
 }
 
 const MealsNavigator = createStackNavigator({
@@ -45,12 +44,16 @@ const MealsNavigator = createStackNavigator({
     {
         defaultNavigationOptions: defaultStackNavOptions,
         // initialRouteName: 'CategoryMeals'
-
     }
 );
 
 const FavNavigator = createStackNavigator({
-    Favorites: FavoritesScreen,
+    Favorites: {
+        screen: FavoritesScreen,
+        navigationOptions: {
+            headerStyle: { backgroundColor: colors.leettersColor }
+        }
+    },
     MealDetails: MealDetailsScreen
 }, {
     defaultNavigationOptions: defaultStackNavOptions,
@@ -98,8 +101,8 @@ const MealsFavoriteTabNavigator =
                 tabBarOptions: {
                     activeTintColor: colors.primaryColor
                 }
-            })
-
+            }
+        )
 
 
 const MainNavigator = createDrawerNavigator({

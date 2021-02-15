@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LogBox } from 'react-native'
 import AppLoading from 'expo-app-loading';
 import fetchFont from './utils/fontSetup'
 import { enableScreens } from 'react-native-screens'
@@ -22,7 +23,7 @@ const store = createStore(rootReducer)
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
-
+  LogBox.ignoreAllLogs();
   if (!fontLoaded) {
     return <AppLoading
       startAsync={fetchFont}

@@ -1,35 +1,37 @@
+//settings
 import React from 'react'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
+import { useSelector } from 'react-redux'
 
 // components
 import CategoryGridTile from './../components/CategoryGridTile'
 import HeaderButton from './../components/HeaderButton'
-import MealFlatList from '../components/MealFlatList'
-
+import FlatListBox from './../components/FlatListBox'
 
 // utils
 import headerStyle from './../styles/headerStyle'
-import { CATEGORIES } from './../data/dummy-data'
 import settings from './../data/defaultSettings'
 
 
 const CategoriesScreen = props => {
-    const renderGridItem = itemData => {
+    const categories = useSelector(state => state.meals.categories);
 
+    const renderGridItem = itemData => {
         return (
             <CategoryGridTile item={itemData.item}
                 onSelect={() =>
                     props.navigation.navigate({
                         routeName: 'CategoryMeals', params: {
-                            categoryId: itemData.item.id
+                            categoryId: itemData.item.id,
+                            defaultCategories: categories
                         }
                     })}
             />
         )
     }
     return (
-        <MealFlatList
-            listData={CATEGORIES || settings.defaultCategory}
+        <FlatListBox
+            listData={categories || settings.defaultCategory}
             itemForRender={renderGridItem}
             colums={2}
         />

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
 
-const MealFlatList = props => {
+const FlatListBox = props => {
 
     const { listData, itemForRender, colums } = props;
     return (
@@ -25,4 +25,4 @@ const s = StyleSheet.create({
     }
 });
 
-export default MealFlatList;
+export default FlatListBox;
